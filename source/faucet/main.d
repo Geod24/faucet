@@ -158,9 +158,16 @@ public void setup (ref State state, API client, uint count)
     A task called periodically that generates and send transactions to a node
 
     This function will wait for block 1 to be externalized before doing anything
-    (block 1 should be triggered by `setup`).
-    Each time this runs, it creates 16 transactions which split an UTXO among
-    15 random keys.
+    (block 1 should be triggered by `setup` if it doesn't exists).
+
+    The amount and size of generated transactions is mostly random,
+    and falls within the following boundaries:
+    - UTXOs values are between 0.000,001 BOA (1000) and 10% of the total supply;
+    - We aim to have a median UTXO amount of 100 BOA (1,000,000,000);
+    - We aim to have between 1000 and 10,000,000 active at any time;
+
+    When the UTXO set falls within 10% of our aim, randomness is increased to
+    ensure a steady supply of new behaviors.
 
     Params:
       client = An API instance to connect to a node
