@@ -144,12 +144,7 @@ public void setup (ref State state, API client, uint count)
     const utxo_len = state.utxos.storage.length;
     immutable size_t WKKeysCount = 1378;
 
-    // If there are less than 50 UTXOs, then print the current UTXO set.
-    // This number is arbitrary for the time being.
-    if (utxo_len < 50)
-        foreach (key, utxo; state.utxos)
-            logInfo("UTXO: [%s] %s", key, utxo);
-
+    logInfo("Setting up: height=%s, %s UTXOs found", state.height, utxo_len);
     if (utxo_len < 200)
     {
         assert(utxo_len >= 8);
