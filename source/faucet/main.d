@@ -168,13 +168,30 @@ public void setup (ref State state, API client, uint count)
 
 *******************************************************************************/
 
-void send (API client, ref State state) @safe
+void send (API client, ref State state)
 {
     state.update(client, Height(state.known + 1));
     if (state.known < 1)
         return logInfo("Waiting for setup to be completed");
 
-    logInfo("About to send transactions, UTXO set: %d entries", state.utxos.length);
+    logInfo("About to send transactions...");
+
+    // Sort them so we don't iterate multiple time
+    // Note: This may cause a lot of memory usage, might need restructuing later
+    // Mutable because of https://issues.dlang.org/show_bug.cgi?id=9792
+    auto sutxo = state.utxos.values.sort!((a, b) => a.output.value < b.output.value);
+    const size = sutxo.length();
+    logInfo("\tUTXO set: %d entries", size);
+
+    immutable median = sutxo[size / 2];
+    // Should be 500M (5,000,000,000,000,000) for the time being
+    immutable sum = sutxo.map!(utxo => utxo.output.value)
+        .fold!((a, b) => Amount(a).mustAdd(b))(Amount(0));
+    assert(sum == Amount.MaxUnitSupply);
+    auto mean = Amount(sum); mean.div(size);
+
+    logInfo("\tMedian: %s, Avg: %s", median, mean);
+    logInfo("\tL: %s, H: %s", sutxo[0], sutxo[$-1]);
 
     foreach (tx; state.utxos.byKeyValue().take(16).splitTx(Config.count))
     {
