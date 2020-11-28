@@ -23,6 +23,7 @@
         "submodules/agora/source/agora/common/ManagedDatabase.d",
         "submodules/agora/source/agora/consensus/data/genesis/Test.d",
         "submodules/agora/source/agora/consensus/data/Block.d",
+        "submodules/agora/source/agora/consensus/data/DataPayload.d",
         "submodules/agora/source/agora/consensus/data/Enrollment.d",
         "submodules/agora/source/agora/consensus/data/Transaction.d",
         "submodules/agora/source/agora/consensus/data/UTXO.d",
