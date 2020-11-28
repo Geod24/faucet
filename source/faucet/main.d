@@ -72,8 +72,7 @@ private struct State
 
         foreach (ref b; blocks)
             foreach (ref tx; b.txs)
-                if (tx.type == TxType.Payment)
-                    this.utxos.put(tx);
+                this.utxos.updateUTXOCache(tx, b.header.height);
 
         // Use signed arithmetic to avoid negative values wrapping around
         const long delta = (cast(long) this.utxos.storage.length) - current_len;
